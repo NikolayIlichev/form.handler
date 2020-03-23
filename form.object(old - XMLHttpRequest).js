@@ -47,7 +47,8 @@ function FormObject(form, errorClass) {
       xhr.open('POST', '/local/templates/eva/ajax/ajax.php?type=' + formType);
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-      xhr.addEventListener('load', function() {
+      xhr.addEventListener('loadend', function() {
+        if (xhr.status == 200 && xhr.response)
         try {
           let response = JSON.parse(xhr.response);
 

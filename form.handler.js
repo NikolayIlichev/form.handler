@@ -1,3 +1,13 @@
+/*
+Example of formOptions variable
+formOptions = {
+  form: event.currentTarget,
+  errorClass: 'input-error',
+  pathTo: '/local/templates/listime/ajax/ajax.php',
+  additionalData: orderData
+}
+*/
+
 function FormHandler(formOptions) {
   this.formObj = formOptions.form;
 
@@ -41,6 +51,10 @@ function FormHandler(formOptions) {
       let formData = new FormData(_this.formObj);
       formData.append('form_type', formType);
 
+      if (formOptions.additionalData) {
+        formData.append('add_data', formOptions.additionalData);
+      }
+
       btn.setAttribute('disabled', true);
 
       let ajaxParams = {
@@ -53,7 +67,7 @@ function FormHandler(formOptions) {
 
       fetch(formOptions.pathTo, ajaxParams)
       .then(function(response) {
-        if (response.status === 200) {
+        if (response.status == 200) {
           return response.json();
         } else {
           cosnole.log(response.status);
