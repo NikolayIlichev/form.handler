@@ -1,9 +1,17 @@
+/*
+Example of formOptions variable
+formOptions = {
+  form: event.currentTarget,
+  errorClass: 'input-error',
+  pathTo: '/local/templates/listime/ajax/ajax.php',
+  additionalData: orderData
+}
+*/
 
+function FormHandler(formOptions) {
+  this.formObj = formOptions.form;
 
-function FormObject(form, errorClass) {
-  this.formObj = form;
-
-  this.formFields = Array.from(form.querySelectorAll('[name]')).filter(function(el) {
+  this.formFields = Array.from(this.formObj.querySelectorAll('[name]')).filter(function(el) {
     return el.classList.contains('required');
   });
 
@@ -13,38 +21,60 @@ function FormObject(form, errorClass) {
       switch (el.getAttribute('name')) {
         case 'name':
           if (!isValidName(elValue) || elValue == '') {
-            el.classList.add(errorClass);
+            el.classList.add(formOptions.errorClass);
           } else {
-            el.classList.remove(errorClass);
+            el.classList.remove(formOptions.errorClass);
           }
           break;        
         case 'email':
           if (elValue == '' || !isValidEmailAddress(elValue)) {
-            el.classList.add(errorClass);
+            el.classList.add(formOptions.errorClass);
           } else {
-            el.classList.remove(errorClass);
+            el.classList.remove(formOptions.errorClass);
           }
           break;
         default:
           if (elValue == '') {
-            el.classList.add(errorClass);
+            el.classList.add(formOptions.errorClass);
           } else {
-            el.classList.remove(errorClass);
+            el.classList.remove(formOptions.errorClass);
           }
           break;
       }
     });
-  }
 
-  this.ajaxSend = function(formType, successFunc) {
+    let optionalFields = this.formFields.filter(function(el) {
+      return el.classList.contains('optional');
+    });
+
+    if (optionalFields.length) {
+      let errorOptionalFields = optionalFields.filter(function(el) {
+        return el.classList.contains(formOptions.errorClass);
+      });
+
+      if (errorOptionalFields.length < optionalFields.length) {
+        optionalFields.forEach(function(el) {
+          el.classList.remove(formOptions.errorClass);
+        });
+      }
+    }
+  };
+
+  this.ajaxSend = function(formType, successFunc) {    
     let btn = this.formObj.querySelector('button');
     let _this = this;
-    if (!_this.formObj.querySelectorAll('.' + errorClass).length) {
+    if (!_this.formObj.querySelectorAll('.' + formOptions.errorClass).length) {
       let formData = new FormData(_this.formObj);
+      formData.append('form_type', formType);
+
+      if (formOptions.additionalData) {
+        formData.append('add_data', formOptions.additionalData);
+      }
+
       btn.setAttribute('disabled', true);
 
       let xhr = new XMLHttpRequest();
-      xhr.open('POST', '/local/templates/eva/ajax/ajax.php?type=' + formType);
+      xhr.open('POST', formOptions.pathTo);
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
       xhr.addEventListener('loadend', function() {
@@ -67,11 +97,11 @@ function FormObject(form, errorClass) {
 
       xhr.send(formData);
     }
-  }
+  };
 
   this.successSend = function(successFunc) {
     successFunc(this.formObj);
-  }
+  };
 }
 
 function isValidEmailAddress(emailAddress) {

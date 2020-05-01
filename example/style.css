@@ -1,0 +1,31 @@
+/*
+Styles for form.handler.js
+*/
+
+.input-error {
+	border: 1px solid red;
+}
+
+button[disabled="true"] {
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+
+/*
+Styles for form
+*/
+form {
+	display: flex;
+    flex-direction: column;
+    max-width: 300px;
+}
+
+input, textarea {
+	margin-bottom: 15px;
+}
+
+button {
+	color: aqua;
+    background-color: #12569c;
+}

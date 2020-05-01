@@ -42,6 +42,22 @@ function FormHandler(formOptions) {
           break;
       }
     });
+
+    let optionalFields = this.formFields.filter(function(el) {
+      return el.classList.contains('optional');
+    });
+
+    if (optionalFields.length) {
+      let errorOptionalFields = optionalFields.filter(function(el) {
+        return el.classList.contains(formOptions.errorClass);
+      });
+
+      if (errorOptionalFields.length < optionalFields.length) {
+        optionalFields.forEach(function(el) {
+          el.classList.remove(formOptions.errorClass);
+        });
+      }
+    }
   }
 
   this.ajaxSend = function(formType, successFunc) {    
