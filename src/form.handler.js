@@ -97,7 +97,7 @@ function FormHandler(formOptions) {
             _this.successSend(successFunc);
           }
         } else {
-          alert(response.message);
+          alert(response.message); // поправить
           btn.removeAttribute('disabled');
         }
       })
