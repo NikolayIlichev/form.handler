@@ -86,7 +86,7 @@ function FormHandler(formOptions) {
         if (response.status == 200) {
           return response.json();
         } else {
-          cosnole.log(response.status);
+          console.log(response.status);
           btn.removeAttribute('disabled');
         }
       })
